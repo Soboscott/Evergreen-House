@@ -33,7 +33,8 @@ const gifByDoor = {
 };
 const error = document.querySelector('#error');
 let activeDoor;
-let popupTimer;
+const tooltip = document.querySelector('#door-tip');
+let tipDoor;
 let remainingMessages = [];
 const lockedMessages = [
   'Oooh, too soon!',
@@ -43,14 +44,35 @@ const lockedMessages = [
   'Caught ya!'
 ];
 
-function showLockedMessage(day) {
+function hideTip() {
+  tipDoor?.removeAttribute('aria-describedby');
+  tipDoor = null;
+  tooltip.hidden = true;
+}
+
+function positionTip() {
+  if (!tipDoor) return;
+  const door = tipDoor.getBoundingClientRect();
+  const center = door.left + door.width / 2;
+  const left = Math.max(8, Math.min(center - tooltip.offsetWidth / 2, document.documentElement.clientWidth - tooltip.offsetWidth - 8));
+  const below = door.top < tooltip.offsetHeight + 14;
+  tooltip.classList.toggle('below', below);
+  tooltip.style.left = left + 'px';
+  tooltip.style.top = (below ? door.bottom + 7 : door.top - tooltip.offsetHeight - 7) + 'px';
+  tooltip.style.setProperty('--arrow', (center - left) + 'px');
+}
+
+function showLockedMessage(button) {
+  if (unlocked(Number(button.value)) || tipDoor === button) return;
+  hideTip();
+  tipDoor = button;
   if (!remainingMessages.length) remainingMessages = [...lockedMessages];
   const index = Math.floor(Math.random() * remainingMessages.length);
   const [message] = remainingMessages.splice(index, 1);
-  statusLine.textContent = message + ' • Opens December ' + day;
-  statusLine.classList.add('locked-popup');
-  clearTimeout(popupTimer);
-  popupTimer = setTimeout(refresh, 3500);
+  tooltip.textContent = message + ' • Opens December ' + button.value;
+  tooltip.hidden = false;
+  button.setAttribute('aria-describedby', tooltip.id);
+  positionTip();
 }
 
 function unlocked(day, now = new Date()) {
@@ -58,8 +80,7 @@ function unlocked(day, now = new Date()) {
 }
 
 function refresh() {
-  clearTimeout(popupTimer);
-  statusLine.classList.remove('locked-popup');
+  hideTip();
   let available = 0;
   for (const button of doors.children) {
     const day = Number(button.value);
@@ -67,7 +88,7 @@ function refresh() {
     available += Number(open);
     button.classList.toggle('available', open);
     button.setAttribute('aria-label', open ? 'Open December ' + day + ' GIF' : 'Door ' + day + ', opens December ' + day);
-    button.title = button.getAttribute('aria-label');
+
   }
   statusLine.textContent = available ? available + ' of 25 doors unlocked. Choose a gold-lit door.' : 'The first door opens December 1.';
 }
@@ -81,9 +102,17 @@ for (let day = 1; day <= 25; day++) {
   leaf.textContent = day;
   button.append(leaf);
   doors.append(button);
+  button.addEventListener('pointerenter', event => {
+    if (event.pointerType === 'mouse') showLockedMessage(button);
+  });
+  button.addEventListener('pointerleave', event => {
+    if (event.pointerType === 'mouse' && tipDoor === button && !button.matches(':focus-visible')) hideTip();
+  });
+  button.addEventListener('focus', () => showLockedMessage(button));
+  button.addEventListener('blur', () => { if (tipDoor === button) hideTip(); });
   button.addEventListener('click', () => {
     if (!unlocked(day)) {
-      showLockedMessage(day);
+      showLockedMessage(button);
       return;
     }
     refresh();
@@ -98,6 +127,10 @@ for (let day = 1; day <= 25; day++) {
     dialog.showModal();
   });
 }
+document.addEventListener('keydown', event => { if (event.key === 'Escape') hideTip(); });
+document.addEventListener('pointerdown', event => { if (!tipDoor?.contains(event.target)) hideTip(); });
+window.addEventListener('scroll', positionTip, { passive: true });
+window.addEventListener('resize', positionTip);
 scene.addEventListener('error', () => {
   if (dialog.open) error.textContent = 'This scene could not load. Use the GIPHY link below to view it.';
 });

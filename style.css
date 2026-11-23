@@ -10,11 +10,13 @@
   max-width: calc(100% - 2rem);
   margin: 0;
   padding: .8rem 1.2rem;
-  background: #fff1d3;
-  color: #29433c;
-  border: 2px solid #c6a469;
+  background: #aa1230;
+  color: #fff;
+  font-weight: 700;
+  border: 4px solid #20c76b;
   border-radius: .8rem;
-  box-shadow: 0 4px 18px #081b2280;
+  box-shadow: 0 0 0 1px #fff, 0 6px 22px #081b22b3;
   pointer-events: none;
 }
+
 

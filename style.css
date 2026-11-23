@@ -53,3 +53,36 @@
 .mailbox-flag::before { content:''; position:absolute; top:0; left:0; width:1.5cqw; height:.85cqw; background:#178352; border:1px solid #255343; border-radius:0 20% 20% 0; }
 @media (max-width:680px) { .art { width:140%; margin-left:-20%; } }
 @media (prefers-reduced-motion:reduce) { .tree-light { animation:none; } }
+
+.snowfall {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  container-type: size;
+}
+.snowflake {
+  position: absolute;
+  top: -2rem;
+  left: var(--left);
+  color: #fff;
+  font: var(--size)/1 Georgia, serif;
+  text-shadow: 0 1px 3px #284650;
+  opacity: .86;
+  animation: snow-fall var(--fall) linear var(--phase) infinite;
+}
+.snowflake span {
+  display: block;
+  animation: snow-sway 3.8s ease-in-out var(--phase) infinite alternate;
+}
+@keyframes snow-fall {
+  to { transform: translateY(calc(100cqh + 3rem)); }
+}
+@keyframes snow-sway {
+  from { transform: translateX(-1cqw) rotate(-12deg); }
+  to { transform: translateX(1.6cqw) rotate(16deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .snowfall { display: none; }
+}

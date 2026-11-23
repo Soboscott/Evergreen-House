@@ -2,6 +2,8 @@
 
 An illustrated Advent calendar for December 2026 with a handpicked GIPHY animation behind each of its 25 doors. Open index.html for a local preview. The GIFs load from GIPHY when an unlocked door opens.
 
+## [Advent Calendar](https://soboscott.github.io/Evergreen-House/)
+
 ## GitHub Pages
 
 Upload the extracted contents to the root of a GitHub repository. Under Settings → Pages, choose Deploy from a branch, select your branch and /(root), then save.

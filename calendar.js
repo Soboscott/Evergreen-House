@@ -5,12 +5,33 @@ const dialog = document.querySelector('dialog');
 const video = dialog.querySelector('video');
 const error = document.querySelector('#error');
 let activeDoor;
+let popupTimer;
+let remainingMessages = [];
+const lockedMessages = [
+  'Oooh, too soon!',
+  'Not yet',
+  'No peeking',
+  "Santa knows when you've been bad",
+  'Caught ya!'
+];
+
+function showLockedMessage(day) {
+  if (!remainingMessages.length) remainingMessages = [...lockedMessages];
+  const index = Math.floor(Math.random() * remainingMessages.length);
+  const [message] = remainingMessages.splice(index, 1);
+  statusLine.textContent = message + ' • Opens December ' + day;
+  statusLine.classList.add('locked-popup');
+  clearTimeout(popupTimer);
+  popupTimer = setTimeout(refresh, 3500);
+}
 
 function unlocked(day, now = new Date()) {
   return now >= new Date(year, 11, day);
 }
 
 function refresh() {
+  clearTimeout(popupTimer);
+  statusLine.classList.remove('locked-popup');
   let available = 0;
   for (const button of doors.children) {
     const day = Number(button.value);
@@ -34,9 +55,10 @@ for (let day = 1; day <= 25; day++) {
   doors.append(button);
   button.addEventListener('click', () => {
     if (!unlocked(day)) {
-      statusLine.textContent = 'Door ' + day + ' opens December ' + day + ', ' + year + '.';
+      showLockedMessage(day);
       return;
     }
+    refresh();
     activeDoor = button;
     activeDoor.classList.add('playing');
     document.querySelector('#date').textContent = 'December ' + day;
@@ -66,3 +88,4 @@ function scheduleRefresh() {
 }
 scheduleRefresh();
 window.addEventListener('focus', refresh);
+

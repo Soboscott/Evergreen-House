@@ -1,6 +1,6 @@
 # Evergreen House
 
-An illustrated Advent calendar for December 2026 with 25 original, silent eight-second Christmas village animations. Extract the ZIP and open index.html for a local preview. Keep videos, the illustration and both code files beside index.html in their original layout.
+An illustrated Advent calendar for December 2026 with a handpicked GIPHY animation behind each of its 25 doors. Open index.html for a local preview. The GIFs load from GIPHY when an unlocked door opens.
 
 ## GitHub Pages
 
@@ -8,4 +8,5 @@ Upload the extracted contents to the root of a GitHub repository. Under Settings
 
 ## Dates and videos
 
-Doors open at midnight on the visitor’s device and stay available afterward. Static hosting makes the MP4s accessible directly to anyone who knows their paths. To use a different season, change the year in calendar.js and index.html. To personalize a door, replace its numbered MP4 in videos with your own clip.
+Doors open at midnight on the visitor’s device and stay available afterward. To use a different season, change the year in calendar.js and index.html. To change a GIF, edit its numbered entry in gifByDoor in calendar.js. For a media URL ending in /ID/giphy.gif, use the ID immediately before giphy.gif.
+

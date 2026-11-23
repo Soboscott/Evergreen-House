@@ -2,7 +2,35 @@ const year = 2026;
 const doors = document.querySelector('#doors');
 const statusLine = document.querySelector('#status');
 const dialog = document.querySelector('dialog');
-const video = dialog.querySelector('video');
+const scene = dialog.querySelector('#scene');
+const sourceLink = dialog.querySelector('#giphy-link');
+const gifByDoor = {
+  1: 'WmkqburJqXziM',
+  2: 'PcKgXgisPwieA',
+  3: 'd1DXrwT2CFD4iNxK',
+  4: 'D28t0Rto3daKI',
+  5: 'UTFiHeDL8cOSA',
+  6: '3o6wrrn32NwP5EgpTG',
+  7: 'l0Erxgfp6Ws0oZYqI',
+  8: '12FzFh6fiJzvq0',
+  9: '8UF5nCsvYHe5a',
+  10: 'lKbvzAgRYvXos',
+  11: 'xUPOqtMLKm2Nwt2wXS',
+  12: '9w475hDWEPVlu',
+  13: 'l0HlF0Uc19pEzigGQ',
+  14: '3bzBKgwX5A6bMh0vl9',
+  15: 'DjmY61OlzO1sQ',
+  16: 'yAhVmsVDyPMGI',
+  17: '3o6wruT67340unOXRu',
+  18: '3nXEgJKLx3ZKQNtgxQ',
+  19: 'lKbvzAgRYvXos',
+  20: 'eMDwDlzP7YhqFygsBb',
+  21: 'UzB5YpHcrSWHgzw2FA',
+  22: '26FKTVIRyPufjuGsM',
+  23: '7v23nKQW50xyM',
+  24: '1X4B2AfWj43aGE0U6A',
+  25: 'zTQyKkuzZXOrJZVEQ0'
+};
 const error = document.querySelector('#error');
 let activeDoor;
 let popupTimer;
@@ -38,7 +66,7 @@ function refresh() {
     const open = unlocked(day);
     available += Number(open);
     button.classList.toggle('available', open);
-    button.setAttribute('aria-label', open ? 'Play December ' + day + ' video' : 'Door ' + day + ', opens December ' + day);
+    button.setAttribute('aria-label', open ? 'Open December ' + day + ' GIF' : 'Door ' + day + ', opens December ' + day);
     button.title = button.getAttribute('aria-label');
   }
   statusLine.textContent = available ? available + ' of 25 doors unlocked. Choose a gold-lit door.' : 'The first door opens December 1.';
@@ -63,20 +91,20 @@ for (let day = 1; day <= 25; day++) {
     activeDoor.classList.add('playing');
     document.querySelector('#date').textContent = 'December ' + day;
     error.textContent = '';
-    video.src = 'videos/' + String(day).padStart(2, '0') + '.mp4';
+    const gifId = gifByDoor[day];
+    scene.alt = 'Christmas GIF for December ' + day;
+    sourceLink.href = 'https://giphy.com/gifs/' + gifId;
+    scene.src = 'https://media.giphy.com/media/' + gifId + '/giphy.gif';
     dialog.showModal();
-    video.play().catch(() => {});
   });
 }
-video.addEventListener('error', () => {
-  if (dialog.open) error.textContent = 'This scene could not load. Close the window and try again.';
+scene.addEventListener('error', () => {
+  if (dialog.open) error.textContent = 'This scene could not load. Use the GIPHY link below to view it.';
 });
 document.querySelector('#close').addEventListener('click', () => dialog.close());
 dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
 dialog.addEventListener('close', () => {
-  video.pause();
-  video.removeAttribute('src');
-  video.load();
+  scene.removeAttribute('src');
   activeDoor.classList.remove('playing');
   activeDoor.focus();
 });
@@ -88,4 +116,5 @@ function scheduleRefresh() {
 }
 scheduleRefresh();
 window.addEventListener('focus', refresh);
+
 

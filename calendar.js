@@ -14,7 +14,7 @@ const gifByDoor = {
   7: 'l0Erxgfp6Ws0oZYqI',
   8: '12FzFh6fiJzvq0',
   9: '8UF5nCsvYHe5a',
-  10: 'lKbvzAgRYvXos',
+  10: 'LREcDcFGuoU',
   11: 'xUPOqtMLKm2Nwt2wXS',
   12: '9w475hDWEPVlu',
   13: 'l0HlF0Uc19pEzigGQ',
@@ -116,5 +116,3 @@ function scheduleRefresh() {
 }
 scheduleRefresh();
 window.addEventListener('focus', refresh);
-
-
